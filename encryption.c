@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-uint8_t *encrypt(uint8_t *buf, size_t buf_size, uint8_t *key, size_t key_size, size_t *encrypted_buf_size)
+uint8_t *encrypt(const uint8_t *buf, size_t buf_size, const uint8_t *key, size_t key_size, size_t *encrypted_buf_size)
 {
 	*encrypted_buf_size = 0;
 
@@ -23,7 +23,7 @@ uint8_t *encrypt(uint8_t *buf, size_t buf_size, uint8_t *key, size_t key_size, s
 	return encrypted_buf;
 }
 
-uint8_t *decrypt(uint8_t *buf, size_t buf_size, uint8_t *key, size_t key_size, size_t *decrypted_buf_size)
+uint8_t *decrypt(const uint8_t *buf, size_t buf_size, const uint8_t *key, size_t key_size, size_t *decrypted_buf_size)
 {
 	return encrypt(buf, buf_size, key, key_size, decrypted_buf_size);
 }

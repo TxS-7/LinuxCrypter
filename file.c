@@ -3,10 +3,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static int file_exists(char *filename);
+static int file_exists(const char *filename);
 static long get_file_size(FILE *fp);
 
-uint8_t *read_file(char *filename, size_t *bytes_read)
+uint8_t *read_file(const char *filename, size_t *bytes_read)
 {
 	*bytes_read = 0;
 
@@ -31,7 +31,7 @@ uint8_t *read_file(char *filename, size_t *bytes_read)
 	return buf;
 }
 
-static int file_exists(char *filename)
+static int file_exists(const char *filename)
 {
 	return access(filename, F_OK) != -1;
 }

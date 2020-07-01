@@ -4,6 +4,6 @@
 #define SUCCESS 0
 #define FAIL 1
 
-int encrypt_file(char *payload_filename, char *stub_filename);
+int encrypt_file(const char *payload_filename, const char *stub_filename);
 
 #endif // CRYPTER_H

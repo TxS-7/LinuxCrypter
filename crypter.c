@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <stdint.h>
 
-static uint8_t *get_encrypted_bytes(char *filename, size_t *encrypted_size);
-static int write_to_stub(uint8_t *buf, size_t buf_size, char *stub_filename);
+static uint8_t *get_encrypted_bytes(const char *filename, size_t *encrypted_size);
+static int write_to_stub(const uint8_t *buf, size_t buf_size, const char *stub_filename);
 
-int encrypt_file(char *payload_filename, char *stub_filename)
+int encrypt_file(const char *payload_filename, const char *stub_filename)
 {
 	size_t encrypted_payload_size;
 	uint8_t *encrypted_payload = get_encrypted_bytes(payload_filename, &encrypted_payload_size);
@@ -24,7 +24,7 @@ int encrypt_file(char *payload_filename, char *stub_filename)
 	return SUCCESS;
 }
 
-static uint8_t *get_encrypted_bytes(char *filename, size_t *encrypted_size)
+static uint8_t *get_encrypted_bytes(const char *filename, size_t *encrypted_size)
 {
 	size_t buf_size;
 	uint8_t *buf = read_file(filename, &buf_size);
@@ -40,7 +40,7 @@ static uint8_t *get_encrypted_bytes(char *filename, size_t *encrypted_size)
 	return encrypted_payload;
 }
 
-static int write_to_stub(uint8_t *buf, size_t buf_size, char *stub_filename)
+static int write_to_stub(const uint8_t *buf, size_t buf_size, const char *stub_filename)
 {
 	return SUCCESS;
 }
