@@ -1,13 +1,23 @@
-OBJS = main.o crypter.o encryption.o elf_utils.o file.o
-EXEC = crypter
+CRYPTER_OBJS = main.o crypter.o encryption.o elf_utils.o file.o
+STUB_OBJS = stub.o crypter.o encryption.o elf_utils.o file.o
+CRYPTER_EXEC = crypter
+STUB_EXEC = stub
 
-crypter: ${OBJS}
-	gcc -o ${EXEC} ${OBJS}
+all: crypter stub
+
+crypter: ${CRYPTER_OBJS}
+	gcc -o ${CRYPTER_EXEC} ${CRYPTER_OBJS}
+
+stub: ${STUB_OBJS}
+	gcc -o ${STUB_EXEC} ${STUB_OBJS}
 
 main.o: main.c crypter.h
 	gcc -Wall -c main.c
 
-crypter.o: crypter.c crypter.h encryption.h file.h
+stub.o: stub.c crypter.h elf_utils.h encryption.h
+	gcc -Wall -c stub.c
+
+crypter.o: crypter.c crypter.h elf_utils.h encryption.h file.h
 	gcc -Wall -c crypter.c
 
 encryption.o: encryption.c encryption.h
@@ -20,4 +30,4 @@ file.o: file.c file.h
 	gcc -Wall -c file.c
 
 clean:
-	rm -f ${OBJS} ${EXEC}
+	rm -f ${CRYPTER_OBJS} ${STUB_OBJS} ${CRYPTER_EXEC} ${STUB_EXEC}
