@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static int file_exists(const char *filename);
 static long get_file_size(FILE *fp);
 
 uint8_t *read_file(const char *filename, size_t *bytes_read)
@@ -23,6 +22,7 @@ uint8_t *read_file(const char *filename, size_t *bytes_read)
 
 	uint8_t *buf = malloc(file_size);
 	size_t read_size = fread(buf, 1, file_size, fp);
+	
 	if (read_size == 0 || read_size < file_size) {
 		fprintf(stderr, "read_file: Something went wrong while reading file: %s\n", filename);
 		fclose(fp);
@@ -35,7 +35,7 @@ uint8_t *read_file(const char *filename, size_t *bytes_read)
 	return buf;
 }
 
-static int file_exists(const char *filename)
+int file_exists(const char *filename)
 {
 	return access(filename, F_OK) != -1;
 }
