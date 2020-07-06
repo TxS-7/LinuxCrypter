@@ -2,6 +2,6 @@
 
 int main(void)
 {
-	encrypt_file("/etc/passwd", "stub.c");
+	encrypt_file("hello", "stub");
 	return 0;
 }
