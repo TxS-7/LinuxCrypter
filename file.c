@@ -35,6 +35,37 @@ uint8_t *read_file(const char *filename, size_t *bytes_read)
 	return buf;
 }
 
+int write_to_file_at_offset(const char *filename, const uint8_t *buf, size_t buf_size, long offset)
+{
+	if (!file_exists(filename)) {
+		return -1;
+	}
+
+	FILE *fp = fopen(filename, "w");
+	long file_size = get_file_size(fp);
+	if (offset >= file_size) {
+		fclose(fp);
+		return -1;
+	}
+
+	if (fseek(fp, offset, SEEK_SET) == -1) {
+		fprintf(stderr, "fseek");
+		fclose(fp);
+		return -1;
+	}
+
+	size_t bytes_written = fwrite(buf, 1, buf_size, fp);
+	if (bytes_written != buf_size) {
+		fprintf(stderr, "fwrite");
+		fclose(fp);
+		return -1;
+	}
+
+	fclose(fp);
+
+	return 0;
+}
+
 int file_exists(const char *filename)
 {
 	return access(filename, F_OK) != -1;
