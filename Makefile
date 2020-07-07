@@ -29,5 +29,8 @@ elf_utils.o: elf_utils.c elf_utils.h
 file.o: file.c file.h
 	gcc -Wall -c file.c
 
+hello: hello.c
+	gcc -o hello hello.c
+
 clean:
 	rm -f ${CRYPTER_OBJS} ${STUB_OBJS} ${CRYPTER_EXEC} ${STUB_EXEC}
