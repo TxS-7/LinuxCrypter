@@ -2,6 +2,7 @@ CRYPTER_OBJS = main.o crypter.o encryption.o elf_utils.o file.o
 STUB_OBJS = stub.o crypter.o encryption.o elf_utils.o file.o
 CRYPTER_EXEC = crypter
 STUB_EXEC = stub
+HELLO_EXEC = hello
 
 all: crypter stub
 
@@ -30,7 +31,7 @@ file.o: file.c file.h
 	gcc -Wall -c file.c
 
 hello: hello.c
-	gcc -o hello hello.c
+	gcc -o ${HELLO_EXEC} hello.c
 
 clean:
-	rm -f ${CRYPTER_OBJS} ${STUB_OBJS} ${CRYPTER_EXEC} ${STUB_EXEC}
+	rm -f ${CRYPTER_OBJS} ${STUB_OBJS} ${CRYPTER_EXEC} ${STUB_EXEC} ${HELLO_EXEC}
