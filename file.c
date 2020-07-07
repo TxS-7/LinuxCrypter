@@ -13,7 +13,7 @@ uint8_t *read_file(const char *filename, size_t *bytes_read)
 		return NULL;
 	}
 
-	FILE *fp = fopen(filename, "r");
+	FILE *fp = fopen(filename, "rb");
 	long file_size = get_file_size(fp);
 	if (file_size <= 0) {
 		fclose(fp);
@@ -41,7 +41,7 @@ int write_to_file_at_offset(const char *filename, const uint8_t *buf, size_t buf
 		return -1;
 	}
 
-	FILE *fp = fopen(filename, "w");
+	FILE *fp = fopen(filename, "rb+");
 	long file_size = get_file_size(fp);
 	if (offset >= file_size) {
 		fclose(fp);
