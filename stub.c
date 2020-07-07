@@ -46,7 +46,7 @@ int main(void)
 
 	// Check if the payload is a valid ELF
 	if (!is_elf(elf_file, elf_size)) {
-		fprintf(stderr, "Invalid ELF");
+		fprintf(stderr, "Invalid ELF\n");
 		return -1;
 	}
 
