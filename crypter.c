@@ -106,7 +106,7 @@ static long find_in_buffer(const uint8_t *buf, size_t buf_size, const uint8_t *b
 		return -1;
 	}
 
-	for (size_t i = 0; i < buf_size; i++) {
+	for (size_t i = 0; i < buf_size - bytes_to_find_size; i++) {
 		if (memcmp(buf + i, bytes_to_find, bytes_to_find_size) == 0) {
 			return i;
 		}
