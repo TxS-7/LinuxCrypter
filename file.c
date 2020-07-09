@@ -84,6 +84,17 @@ int write_to_file_at_offset(const char *filename, const uint8_t *buf, size_t buf
 	return 0;
 }
 
+int copy_file(const char *src_filename, const char *dest_filename)
+{
+	size_t buf_size;
+	const uint8_t *buf = read_file(src_filename, &buf_size);
+	if (!buf) {
+		return -1;
+	}
+
+	return write_to_file_at_offset(dest_filename, buf, buf_size, 0);
+}
+
 int file_exists(const char *filename)
 {
 	return access(filename, F_OK) != -1;
