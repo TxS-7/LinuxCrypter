@@ -42,7 +42,7 @@ int encrypt_file(const char *payload_filename, const char *stub_filename)
 		return FAIL;
 	}
 
-	printf("Done\n");
+	free(encrypted_payload);
 
 	return SUCCESS;
 }
