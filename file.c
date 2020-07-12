@@ -2,16 +2,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 static long get_file_size(FILE *fp);
 
 uint8_t *read_file(const char *filename, size_t *bytes_read)
 {
 	*bytes_read = 0;
-
-	if (!file_exists(filename)) {
-		return NULL;
-	}
 
 	FILE *fp = fopen(filename, "rb");
 	if (!fp) {
@@ -28,6 +25,7 @@ uint8_t *read_file(const char *filename, size_t *bytes_read)
 	uint8_t *buf = malloc(file_size);
 	if (!buf) {
 		fprintf(stderr, "malloc: Failed to allocate %ld bytes\n", file_size);
+		return NULL;
 	}
 
 	size_t read_size = fread(buf, 1, file_size, fp);
@@ -46,35 +44,40 @@ uint8_t *read_file(const char *filename, size_t *bytes_read)
 
 int write_to_file_at_offset(const char *filename, const uint8_t *buf, size_t buf_size, long offset)
 {
-	if (!file_exists(filename) || offset < 0) {
+	if (!filename || !buf || buf_size == 0 || offset < 0) {
 		return -1;
 	}
 
-	if (!buf || buf_size == 0) {
-		return -1;
+	FILE *fp = NULL;
+
+	if (!file_exists(filename)) {
+		// Create a new file
+		printf("Creating new file: %s\n", filename);
+		fp = fopen(filename, "w");
+	} else {
+		fp = fopen(filename, "rb+");
 	}
 
-	FILE *fp = fopen(filename, "rb+");
 	if (!fp) {
 		perror("fopen");
 		return -1;
 	}
 
 	long file_size = get_file_size(fp);
-	if (file_size <= 0 || offset >= file_size) {
+	if (file_size < 0) {
 		fclose(fp);
 		return -1;
 	}
 
 	if (fseek(fp, offset, SEEK_SET) == -1) {
-		fprintf(stderr, "fseek: Failed to set file position to: %ld\n", offset);
+		perror("fseek");
 		fclose(fp);
 		return -1;
 	}
 
 	size_t bytes_written = fwrite(buf, 1, buf_size, fp);
 	if (bytes_written != buf_size) {
-		fprintf(stderr, "fwrite: Failed to write %ld bytes\n", buf_size);
+		fprintf(stderr, "fwrite: Failed to write %ld bytes to %s\n", buf_size, filename);
 		fclose(fp);
 		return -1;
 	}
@@ -86,13 +89,38 @@ int write_to_file_at_offset(const char *filename, const uint8_t *buf, size_t buf
 
 int copy_file(const char *src_filename, const char *dest_filename)
 {
-	size_t buf_size;
-	const uint8_t *buf = read_file(src_filename, &buf_size);
-	if (!buf) {
+	if (!src_filename || !dest_filename) {
 		return -1;
 	}
 
-	return write_to_file_at_offset(dest_filename, buf, buf_size, 0);
+	size_t buf_size;
+	uint8_t *buf = read_file(src_filename, &buf_size);
+	if (!buf) {
+		fprintf(stderr, "Failed to read: %s\n", src_filename);
+		return -1;
+	}
+
+	if (write_to_file_at_offset(dest_filename, buf, buf_size, 0) == -1) {
+		fprintf(stderr, "Failed to write to: %s\n", dest_filename);
+		free(buf);
+		return -1;
+	}
+
+	free(buf);
+
+	// Copy file permissions from source to destination
+	struct stat src_stat;
+	if (stat(src_filename, &src_stat) == -1) {
+		perror("stat");
+		return -1;
+	}
+
+	if (chmod(dest_filename, src_stat.st_mode) == -1) {
+		perror("chmod");
+		return -1;
+	}
+
+	return 0;
 }
 
 int file_exists(const char *filename)
@@ -103,11 +131,16 @@ int file_exists(const char *filename)
 static long get_file_size(FILE *fp)
 {
 	if (fseek(fp, 0, SEEK_END) == -1) {
-		fprintf(stderr, "fseek: Failed to find end of file\n");
+		perror("fseek");
 		return -1;
 	}
 
 	long file_size = ftell(fp);
+	if (file_size == -1) {
+		perror("ftell");
+		return -1;
+	}
+
 	rewind(fp);
 
 	return file_size;
