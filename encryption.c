@@ -1,5 +1,4 @@
 #include "encryption.h"
-#include <string.h>
 #include <stdlib.h>
 
 uint8_t *encrypt(const uint8_t *buf, size_t buf_size, const uint8_t *key, size_t key_size, size_t *encrypted_buf_size)
