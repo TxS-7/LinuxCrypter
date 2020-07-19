@@ -101,7 +101,7 @@ static int generate_encrypted_file(const uint8_t *buf, size_t buf_size, const ch
 		return FAIL;
 	}
 
-	uint8_t bytes_to_find[] = { 'A', 'B', 'C', 'D', 'E', 'F' };
+	uint8_t bytes_to_find[] = CRYPTER_PAYLOAD_LOCATOR;
 	long write_pos = find_in_buffer(stub_buf, stub_size, bytes_to_find, sizeof(bytes_to_find));
 	if (write_pos == -1) {
 		fprintf(stderr, "Failed to find position to write in the stub\n");

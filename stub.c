@@ -13,7 +13,7 @@
 
 // Used to allocate space in the ELF .data section, so we need to initialize it.
 // This buffer will be replaced with the encrypted payload by the crypter
-uint8_t buf[CRYPTER_MAX_PAYLOAD_SIZE] = { 'A', 'B', 'C', 'D', 'E', 'F' };
+uint8_t buf[CRYPTER_MAX_PAYLOAD_SIZE] = CRYPTER_PAYLOAD_LOCATOR;
 
 static uint8_t *read_payload(size_t *payload_size);
 
@@ -71,7 +71,7 @@ uint8_t *read_payload(size_t *payload_size)
 	*payload_size = 0;
 
 	// Check if something has been written by the crypter
-	uint8_t initial_data[] = { 'A', 'B', 'C', 'D', 'E', 'F' };
+	uint8_t initial_data[] = CRYPTER_PAYLOAD_LOCATOR;
 	if (memcmp(buf, initial_data, sizeof(initial_data)) == 0) {
 		fprintf(stderr, "No payload found\n");
 		return NULL;
