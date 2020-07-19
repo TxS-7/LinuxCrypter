@@ -4,6 +4,7 @@ a.out
 crypter
 stub
 hello
+build
 
 CMakeLists.txt.user
 CMakeCache.txt
