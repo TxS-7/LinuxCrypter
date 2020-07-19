@@ -319,13 +319,6 @@ TEST(FileTests, test_file_exists_file_does_not_exist)
 	ASSERT_FALSE(file_exists(filename));
 }
 
-TEST(FileTests, test_file_exists_file_exists_without_read_permission)
-{
-	const char *filename = "../../tests/testfiles/file_tests/no_read_permission.txt";
-
-	ASSERT_TRUE(file_exists(filename));
-}
-
 TEST(FileTests, test_file_exists_filename_is_null)
 {
 	ASSERT_FALSE(file_exists(NULL));
