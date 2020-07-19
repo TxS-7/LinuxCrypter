@@ -8,7 +8,7 @@ The encrypted payload is then written to the stub's .data section (stub.c).
 The stub reads the encrypted payload from its memory, decrypts it back to an ELF file and executes it.
 
 
-## How It Works
+## How it works
 
 In the stub we define an initialized global buffer that will allocate space in the .data section of the
 resulting ELF file. This is where the encrypted payload will be written by the crypter application.
@@ -33,16 +33,34 @@ $ lsof -p <pid>
 ```
 
 
-## How To Build It
+## How to build it
 
 ```
+$ mkdir build/
 $ cd build/
 $ cmake ..
 $ make
 ```
 
+## How to run the Unit Tests
 
-## How To Test It
+### Install gtest
+
+```
+$ sudo apt-get install libgtest-dev
+```
+
+### Build and run the tests
+```
+$ mkdir build/
+$ cd build/
+$ cmake -DBUILD_TESTS=ON ..
+$ make
+$ cd tests
+$ ./crypter_tests
+```
+
+## How to test it
 
 To test it with the hello world program (hello.c):
 
