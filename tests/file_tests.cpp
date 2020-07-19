@@ -228,20 +228,6 @@ TEST(FileTests, test_write_to_file_at_offset_offset_is_negative)
 	ASSERT_FALSE(test_file_exists(filename));
 }
 
-TEST(FileTests, test_write_to_file_at_offset_no_write_permission)
-{
-	const char *filename = "../../tests/testfiles/file_tests/output/no_write_permission.txt";
-	const char *expected_output_filename = "../../tests/testfiles/file_tests/expected/no_write_permission.txt";
-
-	ASSERT_TRUE(test_file_exists(filename));
-
-	const uint8_t buf[] = { 0x00, 0xfe, 0x33, 0xc2, 0x3d, 0xaa, 0xbc, 0x00 };
-
-	ASSERT_EQ(-1, write_to_file_at_offset(filename, buf, sizeof(buf), 5));
-
-	ASSERT_TRUE(test_files_are_the_same(filename, expected_output_filename));
-}
-
 TEST(FileTests, test_copy_file)
 {
 	const char *src_filename = "../../tests/testfiles/file_tests/existing.txt";
