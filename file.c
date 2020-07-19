@@ -100,6 +100,14 @@ int copy_file(const char *src_filename, const char *dest_filename)
 		return -1;
 	}
 
+	if (file_exists(dest_filename)) {
+		if (remove(dest_filename) == -1) {
+			perror("remove");
+			free(buf);
+			return -1;
+		}
+	}
+
 	if (write_to_file_at_offset(dest_filename, buf, buf_size, 0) == -1) {
 		fprintf(stderr, "Failed to write to: %s\n", dest_filename);
 		free(buf);
