@@ -8,4 +8,8 @@ add_executable(hello hello.c)
 
 add_library(crypter_lib STATIC crypter.c encryption.c elf_utils.c file.c)
 
-add_subdirectory(tests)
+option(BUILD_TESTS "Build tests" OFF)
+
+if (BUILD_TESTS)
+	add_subdirectory(tests)
+endif()
